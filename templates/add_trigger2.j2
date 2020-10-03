@@ -2,9 +2,9 @@
    "jsonrpc": "2.0",
    "method": "trigger.create",
    "params": {
-      "description": "Web Check {{item.name}} failed",
-      "expression": "{% raw %}{{% endraw %}{{item.zabbix_host.name}}:web.test.fail[{{item.name}}].min({{ item.watch_window }})}>0",
-      "priority": {{ zabbix_web_check_trigger_priority }},
+      "description": "{{item.name}} too slow",
+      "expression": "{% raw %}{{% endraw %}{{item.zabbix_host.name}}:web.test.time[{{item.name}},{{item.name}} URL,resp].min({{ item.watch_window }})}>{{ item.slow_threshold }}",
+      "priority": {{ zabbix_web_check_slow_trigger_priority }},
       "url": "{{item.url}}",
       {% if item.trigger_tags is defined %}
       "tags": [

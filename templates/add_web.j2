@@ -3,22 +3,17 @@
    "method": "httptest.create",
    "params": {
       "name": "{{item.name}}",
-      {% if item.zabbix_host is defined %}
       "hostid": "{{item.zabbix_host.hostid}}",
       "applicationid": "{{item.zabbix_host.applicationid}}",
-      {% else %}
-      "hostid": "{{z_hostid}}",
-      "applicationid": "{{z_applicationid}}",
-      {% endif %}
-      "delay": "{{z_interval}}",
-      "retries": "{{z_retries}}",
-      "agent": "{{z_agent}}",
+      "delay": "{{zabbix_web_check_interval}}",
+      "retries": "{{zabbix_web_check_retries}}",
+      "agent": "{{zabbix_web_check_ua}}",
       {% if item.auth is defined %}
       "authentication": 1,
       "http_user": "{{item.auth.http_user}}",
       "http_password": "{{item.auth.http_password}}",
       {% endif %}
-      {% if item.https is defined and item.https == 'yes' %}
+      {% if item.url.startswith('https://') %}
         {% if item.ssl_verify_peer is not defined or item.ssl_verify_peer != 'no' %}
       "verify_peer": 1,
         {% endif %}
@@ -27,27 +22,16 @@
         {% endif %}
       {% endif %}
       "steps": [
-         {% if item.http is not defined or item.http != 'no' %}
          {
-            "name": "HTTP Homepage",
-            "url": "http://{{item.url}}",
+            "name": "{{ item.name  }} URL",
+            "url": "{{item.url}}",
             "status_codes": "{{item.status_codes|default('200')}}",
-            "retrieve_mode": "{% if (item.method is defined and item.method == 'GET') or item.required is defined %}0{% else %}1{% endif %}",
+            "retrieve_mode": "{% if item.method == 'GET' %}0{% else %}1{% endif %}",
             {% if item.required is defined %}
             "required": "{{item.required}}",
             {% endif %}
             "no": 1
-         },{% endif %}{% if item.https is defined and item.https == 'yes' %}
-         {
-            "name": "HTTPs Homepage",
-            "url": "https://{{item.url}}",
-            "status_codes": "{{item.status_codes|default('200')}}",
-            "retrieve_mode": "{% if (item.method is defined and item.method == 'GET') or item.required is defined %}0{% else %}1{% endif %}",
-            {% if item.required is defined %}
-            "required": "{{item.required}}",
-            {% endif %}
-            "no": 2
-         }{% endif %}
+         }
       ]
    },
    "auth": "{{z_authtoken}}",

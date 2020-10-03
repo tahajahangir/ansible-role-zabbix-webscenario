@@ -1,10 +1,15 @@
----
-z_user: api_ansible
-z_password: 'strongpassword'
+zabbix_api_user: api_ansible
+zabbix_api_pass: 'strongpassword'
+zabbix_url: 'https://zabbix.example.com'
+zabbix_jsonrpc_url: '{{ zabbix_url }}/api_jsonrpc.php'
 
-z_url: 'https://zabbix.mycompany.com/api_jsonrpc.php'
-z_host: "zabbixproxy01"
-z_applicationid: 1457
-z_interval: 30
-z_retries: 5
-z_agent: "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.104 Safari/537.36"
+zabbix_web_check_host: "Zabbix server"
+zabbix_web_check_trigger_priority: 4  # High
+zabbix_web_check_slow_trigger_priority: 3  # Average
+zabbix_web_check_application_name: "Web Check"
+zabbix_web_check_slow_threshold: 1 # seconds
+zabbix_web_check_interval: 60
+zabbix_web_check_retries: 2
+zabbix_web_check_ua: "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.104 Safari/537.36"
+zabbix_web_check_websites: []
+zabbix_web_check_watch_window: 3m  # 3 minutes
